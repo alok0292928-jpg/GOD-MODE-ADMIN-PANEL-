@@ -3,227 +3,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHIKARI ADMIN GOD MODE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <title>NOBITA PRO USER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        /* --- STYLE SECTION --- */
-        * { box-sizing: border-box; outline: none; }
-        body { background-color: #020202; color: #00ff41; font-family: 'Rajdhani', sans-serif; padding: 20px; margin: 0; max-width: 800px; margin: 0 auto; }
-        
+        /* --- CORE STYLES --- */
+        * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body {
+            background-color: #050505; color: white; font-family: 'Rajdhani', sans-serif;
+            margin: 0; display: flex; justify-content: center; min-height: 100vh; overflow: hidden;
+            background-image: linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .app-container {
+            width: 100%; max-width: 450px; height: 100vh; display: flex; flex-direction: column;
+            position: relative; background: rgba(0,0,0,0.9); border: 1px solid #111;
+        }
+
+        /* LAYERS (Login, App, Maintenance) */
+        .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000; }
+        .hidden { display: none !important; }
+
         /* HEADER */
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #00ff41; padding-bottom: 15px; margin-bottom: 20px; }
-        h1 { font-family: 'Orbitron'; margin: 0; font-size: 24px; text-shadow: 0 0 10px #00ff41; }
-        .stats { display: flex; gap: 15px; font-size: 14px; font-weight: bold; color: #fff; }
-        .stat-box { background: #111; padding: 5px 10px; border-radius: 4px; border: 1px solid #333; }
-
-        /* SECTIONS */
-        .panel { background: #0a0a0a; border: 1px solid #333; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .panel-head { font-family: 'Orbitron'; font-size: 16px; color: #fff; margin-bottom: 15px; display: flex; justify-content: space-between; }
-
-        /* INPUTS */
-        .input-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        input, select { background: #000; color: #00ff41; border: 1px solid #333; padding: 12px; font-family: 'Rajdhani'; font-size: 16px; border-radius: 4px; width: 100%; }
-        input:focus { border-color: #00ff41; box-shadow: 0 0 10px rgba(0,255,65,0.2); }
+        .header { padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #00ff41; background: #0a0a0a; }
+        .brand { font-family: 'Orbitron'; font-weight: 900; font-size: 20px; }
         
-        /* CALENDAR */
-        input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+        /* PLAN BADGE (Dynamic) */
+        .plan-badge { padding: 4px 10px; border-radius: 5px; font-size: 10px; font-weight: bold; font-family: 'Orbitron'; text-transform: uppercase; }
+        .badge-silver { background: #333; color: #fff; border: 1px solid #aaa; }
+        .badge-gold { background: rgba(255, 215, 0, 0.2); color: #ffd700; border: 1px solid #ffd700; }
+        .badge-diamond { background: rgba(0, 229, 255, 0.2); color: #00e5ff; border: 1px solid #00e5ff; }
+
+        /* CONTENT */
+        .content { flex: 1; padding: 20px; overflow-y: auto; text-align: center; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+
+        /* INPUT AREA */
+        .input-card { background: #111; border: 1px solid #333; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+        .game-input { background: #000; border: 2px solid #00ff41; color: #fff; font-family: 'Orbitron'; font-size: 30px; width: 120px; text-align: center; border-radius: 10px; padding: 10px; outline: none; }
+        
+        /* CIRCLE PREDICTION */
+        .circle-container { display: flex; justify-content: center; margin: 20px 0; }
+        .prediction-circle { width: 200px; height: 200px; border-radius: 50%; border: 4px solid #222; display: flex; flex-direction: column; justify-content: center; align-items: center; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        .pred-text { font-family: 'Orbitron'; font-weight: 900; font-size: 45px; opacity: 0; }
+        .scanning { animation: shake 0.2s infinite; color: #aaa; font-size: 20px; opacity: 1; }
+        
+        /* ANIMATIONS */
+        @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 100% { transform: translateX(0); } }
+        .animate-result { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .green-glow { color: #00ff41; text-shadow: 0 0 30px #00ff41; }
+        .red-glow { color: #ff003c; text-shadow: 0 0 30px #ff003c; }
+
+        /* NUMBERS */
+        .number-box { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .num-block { width: 50px; height: 50px; border: 1px solid #333; background: #0a0a0a; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-family: 'Orbitron'; font-size: 20px; font-weight: bold; color: #aaa; }
+        .num-active { border-color: #00e5ff; color: #00e5ff; text-shadow: 0 0 10px #00e5ff; animation: popIn 0.6s ease forwards; }
 
         /* BUTTONS */
-        .btn { background: #00ff41; color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; font-family: 'Orbitron'; border-radius: 4px; transition: 0.3s; }
-        .btn:hover { box-shadow: 0 0 15px #00ff41; transform: scale(1.02); }
-        .btn-danger { background: #ff003c; color: #fff; }
-        .btn-warn { background: #ff9800; color: #000; }
-        .btn-copy { background: #00e5ff; color: #000; padding: 5px 10px; font-size: 10px; margin-left: 5px; cursor: pointer; border: none; border-radius: 3px; }
-
-        /* KEY LIST STYLES */
-        .key-list { display: flex; flex-direction: column; gap: 10px; max-height: 500px; overflow-y: auto; }
-        .key-card { background: #111; padding: 15px; border-radius: 5px; border-left: 4px solid #333; display: flex; justify-content: space-between; align-items: center; }
-        .key-card.active { border-left-color: #00ff41; }
-        .key-card.expired { border-left-color: #ff003c; opacity: 0.6; }
-
-        .key-info { display: flex; flex-direction: column; }
-        .key-name { font-size: 18px; font-weight: bold; color: #fff; font-family: 'Orbitron'; display: flex; align-items: center; }
-        .key-meta { font-size: 12px; color: #888; margin-top: 5px; }
+        .action-btn { width: 100%; padding: 15px; margin-top: 10px; background: #00ff41; border: none; color: #000; font-family: 'Orbitron'; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; }
         
-        .status-badge { font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 10px; }
-        .badge-active { background: #00ff41; color: black; }
-        .badge-expired { background: #ff003c; color: white; }
+        /* HISTORY */
+        .history-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+        .history-header th { padding: 10px; background: #111; color: #888; border-bottom: 2px solid #333; }
+        .history-row td { padding: 15px 5px; text-align: center; border-bottom: 1px solid #222; }
+        .status-btn { padding: 2px 8px; border: 1px solid #333; background: black; color: #aaa; font-size: 10px; cursor: pointer; }
+        .status-btn.win { border-color: #00ff41; color: #00ff41; }
+        .status-btn.loss { border-color: red; color: red; }
 
-        .actions { display: flex; gap: 5px; }
-        .btn-sm { padding: 5px 10px; font-size: 12px; border: none; cursor: pointer; border-radius: 3px; font-weight: bold; }
+        /* NAVBAR */
+        .navbar { position: absolute; bottom: 20px; left: 20px; right: 20px; height: 60px; background: #111; border: 1px solid #333; border-radius: 30px; display: flex; justify-content: space-around; align-items: center; }
+        .nav-item { color: #555; font-size: 20px; cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: #00ff41; text-shadow: 0 0 10px #00ff41; }
 
-        @media (max-width: 768px) {
-            .input-group { grid-template-columns: 1fr; }
-            .key-card { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .actions { width: 100%; justify-content: space-between; }
-        }
+        /* MAINTENANCE */
+        .maint-icon { font-size: 50px; color: red; margin-bottom: 20px; }
+        .maint-text { font-family: 'Orbitron'; font-size: 24px; color: white; margin-bottom: 10px; }
+        .maint-sub { color: #888; font-size: 12px; text-align: center; }
+
+        /* LOGIN INPUTS */
+        .login-input { background: #111; border: 1px solid #333; padding: 15px; width: 80%; color: white; text-align: center; font-family: 'Orbitron'; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>SHIKARI ADMIN</h1>
-        <div class="stats">
-            <div class="stat-box">KEYS: <span id="totalCount">0</span></div>
-            <div class="stat-box" style="color:#00ff41">ACTIVE: <span id="activeCount">0</span></div>
-        </div>
+    <div id="maintenanceLayer" class="layer hidden" style="z-index: 999; background: #050505;">
+        <div class="maint-icon">⚠️</div>
+        <div class="maint-text">MAINTENANCE</div>
+        <div class="maint-sub">SERVER UNDER UPGRADE.<br>PLEASE WAIT FOR ADMIN UPDATE.</div>
     </div>
 
-    <div class="panel">
-        <div class="panel-head">CREATE NEW KEY</div>
-        <div class="input-group">
-            <input type="text" id="newKey" placeholder="KEY NAME (e.g. VIP-USER)" style="text-transform: uppercase;">
-            <input type="text" id="userNote" placeholder="NOTE (e.g. Paid 500)">
-            <input type="datetime-local" id="expiryDate">
-        </div>
-        <button class="btn" onclick="generateKey()" style="width:100%;">GENERATE KEY</button>
+    <div id="loginLayer" class="layer">
+        <h2 style="font-family:'Orbitron'; color:#00ff41; margin-bottom: 30px;">NOBITA SECURITY</h2>
+        <input type="text" id="keyInput" class="login-input" placeholder="ENTER VIP KEY">
+        <button class="action-btn" style="width: 80%;" onclick="login()">CONNECT</button>
+        <p id="loginStatus" style="color:red; font-size:12px; margin-top:10px;"></p>
     </div>
 
-    <div class="panel">
-        <div class="panel-head">
-            <span>DATABASE KEYS</span>
-            <button class="btn-sm btn-warn" onclick="window.location.reload()">REFRESH LIST</button>
-        </div>
+    <div id="appLayer" class="app-container hidden">
         
-        <input type="text" id="searchBar" placeholder="Search keys..." style="width:100%; margin-bottom:10px; padding:10px; background:#000; border:1px solid #333; color:#fff;" onkeyup="filterKeys()">
+        <div class="header">
+            <div>
+                <div class="brand">NOBITA AI</div>
+                <div id="userBadge" class="plan-badge">LOADING...</div>
+            </div>
+            <button onclick="logout()" style="background:none; border:none; color:red; font-size:10px;">LOGOUT</button>
+        </div>
 
-        <div id="loading" style="text-align:center; padding:20px; color:#aaa;">Connecting to Database...</div>
-        <div id="keyList" class="key-list"></div>
+        <div id="tab-home" class="content tab-content active">
+            <div class="input-card">
+                <input type="tel" id="lastInput" class="game-input" maxlength="1" placeholder="?">
+                <button class="action-btn" onclick="runAnalysis()">SCAN NOW</button>
+            </div>
+
+            <div class="circle-container">
+                <div class="prediction-circle" id="mainCircle">
+                    <div style="font-size:10px; color:#aaa;">RESULT</div>
+                    <div id="predText" class="pred-text">--</div>
+                    <div id="predInfo" style="font-size:10px; color:#00e5ff; margin-top:5px; opacity:0;">CONFIDENCE: 99%</div>
+                </div>
+            </div>
+
+            <div id="numbersContainer" class="number-box hidden">
+                <div class="num-block" id="n1">-</div>
+                <div class="num-block" id="n2">-</div>
+                <div class="num-block" id="n3">-</div>
+            </div>
+        </div>
+
+        <div id="tab-history" class="content tab-content">
+            <div style="font-family:'Orbitron'; font-size:16px; margin-bottom:10px;">SESSION HISTORY</div>
+            <table class="history-table">
+                <thead class="history-header"><tr><th>LAST</th><th>PRED</th><th>RESULT</th></tr></thead>
+                <tbody id="historyList"></tbody>
+            </table>
+        </div>
+
+        <div class="navbar">
+            <div class="nav-item active" onclick="switchTab('home', this)">⚡</div>
+            <div class="nav-item" onclick="switchTab('history', this)">📜</div>
+        </div>
     </div>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getDatabase, ref, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, update, child, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  // --- YOUR CONFIG (Replace if needed) ---
-  const firebaseConfig = {
-    apiKey: "AIzaSyDXlyYirIWVN-geJclEXIV408hC5jwB4fg",
-    authDomain: "v110-25f09.firebaseapp.com",
-    databaseURL: "https://v110-25f09-default-rtdb.firebaseio.com",
-    projectId: "v110-25f09",
-    storageBucket: "v110-25f09.firebasestorage.app",
-    messagingSenderId: "971519760374",
-    appId: "1:971519760374:web:e59863fa4d05a22f1c59d7"
-  };
+    const firebaseConfig = {
+        apiKey: "AIzaSyDXlyYirIWVN-geJclEXIV408hC5jwB4fg",
+        authDomain: "v110-25f09.firebaseapp.com",
+        databaseURL: "https://v110-25f09-default-rtdb.firebaseio.com",
+        projectId: "v110-25f09",
+        storageBucket: "v110-25f09.firebasestorage.app",
+        messagingSenderId: "971519760374",
+        appId: "1:971519760374:web:e59863fa4d05a22f1c59d7"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-  // --- 1. GENERATE KEY ---
-  window.generateKey = () => {
-      const keyName = document.getElementById('newKey').value.trim().toUpperCase();
-      const note = document.getElementById('userNote').value.trim();
-      const dateInput = document.getElementById('expiryDate').value;
+    // --- SYSTEM VARIABLES ---
+    let systemLogic = { mode: "normal", gold_win: 80, diamond_win: 95 }; // Default
+    let userPlan = "silver"; // Default
 
-      if(!keyName || !dateInput) { alert("Key Name & Date Required!"); return; }
+    // --- 1. LISTEN FOR MAINTENANCE & LOGIC UPDATE ---
+    onValue(ref(db, 'system_config'), (snap) => {
+        if(snap.exists()) {
+            const config = snap.val();
+            
+            // Check Maintenance
+            if(config.maintenance === true) {
+                document.getElementById('maintenanceLayer').classList.remove('hidden');
+            } else {
+                document.getElementById('maintenanceLayer').classList.add('hidden');
+            }
 
-      const expiryTimestamp = new Date(dateInput).getTime();
-      if(expiryTimestamp < Date.now()) { alert("Date must be in future!"); return; }
+            // Update Logic silently
+            systemLogic = config;
+            console.log("System Updated:", systemLogic);
+        }
+    });
 
-      set(ref(db, 'access_keys/' + keyName), {
-          expiry: expiryTimestamp,
-          deviceId: "",
-          note: note || "No Note",
-          createdAt: Date.now()
-      })
-      .then(() => {
-          alert(`Key Generated: ${keyName}`);
-          document.getElementById('newKey').value = "";
-      })
-      .catch(e => alert("Error: " + e.message));
-  };
+    // --- 2. LOGIN SYSTEM ---
+    window.login = async () => {
+        const key = document.getElementById('keyInput').value.trim();
+        const status = document.getElementById('loginStatus');
+        const deviceId = localStorage.getItem('nobita_did') || 'dev_' + Date.now();
+        localStorage.setItem('nobita_did', deviceId);
 
-  // --- 2. ACTIONS ---
-  window.deleteKey = (key) => {
-      if(confirm("Delete this key?")) remove(ref(db, 'access_keys/' + key));
-  };
+        if(!key) { status.innerText = "Enter Key"; return; }
+        status.innerText = "Verifying...";
 
-  window.resetDevice = (key) => {
-      if(confirm("Unlink Device?")) update(ref(db, 'access_keys/' + key), { deviceId: "" });
-  };
+        try {
+            const snap = await get(child(ref(db), `access_keys/${key}`));
+            if(snap.exists()) {
+                const data = snap.val();
+                const now = Date.now();
 
-  window.copyText = (text) => {
-      navigator.clipboard.writeText(text);
-      alert("Copied: " + text);
-  };
+                // Validation
+                if(data.expiry < now) { status.innerText = "Key Expired!"; return; }
+                if(data.deviceId && data.deviceId !== deviceId) { status.innerText = "Locked to another device!"; return; }
+                
+                // First Time Lock
+                if(!data.deviceId) await update(ref(db, `access_keys/${key}`), { deviceId: deviceId });
 
-  // --- 3. LIVE KEY LISTENER (FIXED) ---
-  const keysRef = ref(db, 'access_keys');
-  
-  onValue(keysRef, (snapshot) => {
-      const list = document.getElementById('keyList');
-      const loader = document.getElementById('loading');
-      loader.style.display = 'none';
-      list.innerHTML = "";
+                // Save Session
+                localStorage.setItem('nobita_key', key);
+                localStorage.setItem('nobita_plan', data.plan); // SAVE PLAN FROM DB
+                
+                startApp(data.plan);
+            } else {
+                status.innerText = "Invalid Key";
+            }
+        } catch(e) {
+            status.innerText = "Network Error";
+        }
+    };
 
-      if(!snapshot.exists()) {
-          list.innerHTML = "<div style='text-align:center; padding:20px; color:#555;'>DATABASE IS EMPTY</div>";
-          return;
-      }
+    // --- 3. START APP UI ---
+    function startApp(plan) {
+        userPlan = plan || 'silver'; // Set Global Plan Variable
+        
+        document.getElementById('loginLayer').classList.add('hidden');
+        document.getElementById('appLayer').classList.remove('hidden');
 
-      const data = snapshot.val();
-      let total = 0, active = 0;
+        // Update Badge
+        const badge = document.getElementById('userBadge');
+        badge.innerText = userPlan.toUpperCase() + " USER";
+        badge.className = `plan-badge badge-${userPlan}`;
 
-      // Iterate and Render
-      Object.keys(data).reverse().forEach(key => { // Reverse to show newest first roughly
-          const info = data[key];
-          total++;
-          
-          const timeLeft = info.expiry - Date.now();
-          const isExpired = timeLeft < 0;
-          if(!isExpired) active++;
+        // Show/Hide Numbers based on Plan
+        if(userPlan === 'silver') {
+            document.getElementById('numbersContainer').classList.add('hidden');
+        } else {
+            document.getElementById('numbersContainer').classList.remove('hidden');
+        }
+    }
 
-          const dateStr = new Date(info.expiry).toLocaleDateString() + " " + new Date(info.expiry).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-          
-          // Device Status Logic
-          let devStatus = '<span style="color:#00e5ff">NO DEVICE</span>';
-          if(info.deviceId) devStatus = `<span style="color:#00ff41">LOCKED (${info.deviceId.slice(0,5)}..)</span>`;
+    // --- 4. PREDICTION LOGIC (CONTROLLED BY SYSTEM LOGIC) ---
+    window.runAnalysis = () => {
+        const input = document.getElementById('lastInput').value;
+        if(!input) return;
 
-          const row = document.createElement('div');
-          row.className = `key-card ${isExpired ? 'expired' : 'active'}`;
-          row.setAttribute('data-search', key.toLowerCase()); // For search function
-          
-          row.innerHTML = `
-              <div class="key-info">
-                  <div class="key-name">
-                      ${key} 
-                      <span class="status-badge ${isExpired ? 'badge-expired' : 'badge-active'}">
-                          ${isExpired ? 'EXPIRED' : 'ACTIVE'}
-                      </span>
-                      <button class="btn-copy" onclick="copyText('${key}')"></button>
-                  </div>
-                  <div class="key-meta" style="color:white;">Note: ${info.note || '--'}</div>
-                  <div class="key-meta">Expires: ${dateStr}</div>
-                  <div class="key-meta">Device: ${devStatus}</div>
-              </div>
-              <div class="actions">
-                  <button class="btn-sm btn-warn" onclick="resetDevice('${key}')">RESET</button>
-                  <button class="btn-sm btn-danger" onclick="deleteKey('${key}')">DEL</button>
-              </div>
-          `;
-          list.appendChild(row);
-      });
+        const predText = document.getElementById('predText');
+        const predInfo = document.getElementById('predInfo');
 
-      document.getElementById('totalCount').innerText = total;
-      document.getElementById('activeCount').innerText = active;
-  }, (error) => {
-      console.error(error);
-      document.getElementById('loading').innerText = "Permission Denied! Check Database Rules.";
-  });
+        // Reset UI
+        predText.classList.remove('animate-result', 'green-glow', 'red-glow');
+        predText.classList.add('scanning');
+        predText.innerText = "SCAN";
+        predInfo.style.opacity = 0;
+        
+        // Hide numbers initially
+        document.querySelectorAll('.num-block').forEach(b => {
+            b.innerText = "-";
+            b.classList.remove('num-active');
+        });
 
-  // --- 4. SEARCH FUNCTION ---
-  window.filterKeys = () => {
-      const input = document.getElementById('searchBar').value.toLowerCase();
-      const cards = document.getElementsByClassName('key-card');
+        setTimeout(() => {
+            // LOGIC CORE
+            let result = Math.random() > 0.5 ? "BIG" : "SMALL";
+            
+            // Apply System Logic Injection (Fake implementation of win rate)
+            // If system mode is aggressive, maybe flip result randomly
+            if(systemLogic.mode === 'aggressive' && Math.random() > 0.7) {
+                result = result === "BIG" ? "SMALL" : "BIG";
+            }
 
-      for (let card of cards) {
-          const text = card.getAttribute('data-search');
-          card.style.display = text.includes(input) ? "flex" : "none";
-      }
-  };
+            // Display Result
+            predText.classList.remove('scanning');
+            void predText.offsetWidth; // Trigger Reflow
+            predText.innerText = result;
+            predText.classList.add('animate-result', result === "BIG" ? "green-glow" : "red-glow");
+            predInfo.style.opacity = 1;
+
+            // HANDLE NUMBERS (GOLD/DIAMOND ONLY)
+            if(userPlan !== 'silver') {
+                let nums = [];
+                if(userPlan === 'gold') {
+                    // Gold = Opposite (Cover)
+                    nums = result === "BIG" ? [0,2,4] : [5,7,9];
+                } else {
+                    // Diamond = Direct
+                    nums = result === "BIG" ? [6,8,9] : [1,3,4];
+                }
+                
+                // Shuffle
+                nums.sort(() => Math.random() - 0.5);
+                
+                setTimeout(() => {
+                    document.getElementById('n1').innerText = nums[0];
+                    document.getElementById('n2').innerText = nums[1];
+                    document.getElementById('n3').innerText = nums[2];
+                    document.querySelectorAll('.num-block').forEach(b => b.classList.add('num-active'));
+                }, 300);
+            }
+
+            // Add History
+            addHistory(input, result);
+
+        }, 1500);
+    };
+
+    function addHistory(last, pred) {
+        const list = document.getElementById('historyList');
+        const row = document.createElement('tr');
+        row.className = 'history-row';
+        row.innerHTML = `
+            <td>${last}</td>
+            <td style="color:${pred==='BIG'?'#00ff41':'red'}; font-weight:bold;">${pred}</td>
+            <td>
+                <button class="status-btn win" onclick="this.style.background='green'; this.style.color='black'">W</button>
+                <button class="status-btn loss" onclick="this.style.background='red'; this.style.color='white'">L</button>
+            </td>
+        `;
+        list.prepend(row);
+    }
+
+    // --- UTILS ---
+    window.switchTab = (id, el) => {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        el.classList.add('active');
+    };
+
+    window.logout = () => {
+        localStorage.removeItem('nobita_key');
+        localStorage.removeItem('nobita_plan');
+        location.reload();
+    };
+
+    // Auto Login Check
+    if(localStorage.getItem('nobita_key')) {
+        // We verify again to check if plan changed or expired
+        window.login(); 
+    }
 
 </script>
-
 </body>
 </html>
-  
